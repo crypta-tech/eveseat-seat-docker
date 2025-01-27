@@ -12,8 +12,8 @@ on:
       - '5.*'
 
 env:
-  DOCKER_REGISTRY_IMAGE: eveseat/seat
-  GHCR_REGISTRY_IMAGE: ghcr.io/eveseat/seat
+  # DOCKER_REGISTRY_IMAGE: eveseat/seat
+  GHCR_REGISTRY_IMAGE: ghcr.io/crypta-tech/seat
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,11 +29,11 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          # - linux/arm64
-          - linux/arm/v7
+          - linux/arm64
+          # - linux/arm/v7
         image:
-          - eveseat/seat
-          - ghcr.io/eveseat/seat
+          #- eveseat/seat
+          - ghcr.io/crypta-tech/seat
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -73,15 +73,15 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: docker.io
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Update embedded manifest
         run: |
@@ -95,8 +95,8 @@ jobs:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ matrix.image }},push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,ref=eveseat/seat/${{ matrix.platform }}
-          cache-to: type=gha,mode=max,ref=eveseat/seat/${{ matrix.platform }}
+          cache-from: type=gha,ref=crypta-tech/seat/${{ matrix.platform }}
+          cache-to: type=gha,mode=max,ref=crypta-tech/seat/${{ matrix.platform }}
 
       - name: Export digest
         run: |
@@ -120,8 +120,8 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - eveseat/seat
-          - ghcr.io/eveseat/seat
+          # - eveseat/seat
+          - ghcr.io/crypta-tech/seat
     steps:
       - name: Get artifact name
         id: getartifactname
@@ -152,15 +152,15 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: docker.io
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Create manifest list and push
         working-directory: /tmp/digests
