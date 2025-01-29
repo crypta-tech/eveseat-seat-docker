@@ -99,7 +99,7 @@ jobs:
           context: .
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ matrix.platform }}-${{ matrix.image }},push-by-digest=true,name-canonical=true,push=true
+          outputs: type=image,name=${{ matrix.image }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,ref=crypta-tech/seat/${{ matrix.platform }}
           cache-to: type=gha,mode=max,ref=crypta-tech/seat/${{ matrix.platform }}
 
