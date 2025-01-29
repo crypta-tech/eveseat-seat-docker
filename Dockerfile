@@ -24,7 +24,7 @@ FROM --platform=$TARGETPLATFORM php:8.4-apache-bookworm AS seat
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
-    iputils-ping dnsutils \ 
+    iputils-ping dnsutils pkg-config \ 
     zip unzip libzip-dev libbz2-dev \
     mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
     libpng-dev libjpeg-dev libfreetype6-dev \
