@@ -130,7 +130,7 @@ jobs:
     steps:
 
       - name: Download digests
-        uses: actions/download-artifact@4
+        uses: actions/download-artifact@v4
         with:
           name: ${{ runner.temp }}/digests
           pattern: digests-*
