@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM php:8.2-alpine AS seat-core
+FROM --platform=$TARGETPLATFORM php:8.4-alpine AS seat-core
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
@@ -13,7 +13,7 @@ RUN composer create-project eveseat/seat:^5.0 --stability dev --no-scripts --no-
     php -r "file_exists('.env') || copy('.env.example', '.env');" && \
     mv /tmp/seat-version /seat/storage/version
 
-FROM --platform=$TARGETPLATFORM php:8.2-apache-bookworm AS seat
+FROM --platform=$TARGETPLATFORM php:8.4-apache-bookworm AS seat
 
 # OS Packages
 # - networking diagnose tools
@@ -26,11 +26,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get install -y --no-install-recommends \
     iputils-ping dnsutils \ 
     zip unzip libzip-dev libbz2-dev \
-    mariadb-client libpq-dev redis-tools \
+    mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
     libpng-dev libjpeg-dev libfreetype6-dev \
     jq libgmp-dev libicu-dev \
+    nano \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && which pg_config
 
 # PHP Extentions
 RUN pecl install redis && \
