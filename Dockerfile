@@ -25,7 +25,7 @@ FROM --platform=$TARGETPLATFORM php:8.2-apache-bookworm AS seat
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
-    iputils-ping dnsutils pkg-config \ 
+    iputils-ping dnsutils pkg-config build-essential \ 
 #    zip unzip libzip-dev libbz2-dev \
 #    mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
     libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev\
@@ -34,6 +34,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 #  && which pg_config
+
+RUN cat /proc/cpuinfo && uname -p
 
 # PHP Extentions
 
