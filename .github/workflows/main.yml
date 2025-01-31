@@ -138,9 +138,8 @@ jobs:
       - name: Download digests
         uses: actions/download-artifact@v4
         with:
-          name: ${{ runner.temp }}/digests
+          path: ${{ runner.temp }}/digests
           pattern: digests-*
-          path: /tmp/digests
           merge-multiple: true
 
       - name: Set up Docker Build-X
