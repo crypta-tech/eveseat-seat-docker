@@ -51,7 +51,7 @@ RUN pecl install redis && \
     docker-php-ext-enable redis && \
     apt-get autoremove
 
-RUN install-php-extensions zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache
+RUN install-php-extensions zip pdo pdo_mysql gd bz2 gmp intl pcntl opcache
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
