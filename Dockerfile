@@ -16,7 +16,8 @@ RUN composer create-project eveseat/seat:^5.0 --stability dev --no-scripts --no-
 FROM --platform=$TARGETPLATFORM php:8.2-apache-bookworm AS seat
 
 # OS Packages
-# - networking diagnose tools
+# - networking diagnose tools 
+# - build tools
 # - compression libraries and tools
 # - databases libraries
 # - picture and drawing libraries
@@ -24,34 +25,31 @@ FROM --platform=$TARGETPLATFORM php:8.2-apache-bookworm AS seat
 ## DISABLED TEMP for other packages
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y \
-    iputils-ping dnsutils pkg-config build-essential \ 
+  && apt-get install -y --no-install-recommends \
+    iputils-ping dnsutils \
+    pkg-config build-essential \ 
     zip unzip libzip-dev libbz2-dev \
-#    mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
+    mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
     libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev\
-    jq libgmp-dev libicu-dev \
-    nano \
+    jq libgmp-dev libicu-dev nano \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
-#  && which pg_config
-
-RUN cat /proc/cpuinfo && uname -p
 
 # PHP Extentions
 
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+# ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-#RUN pecl install redis && \
-#    docker-php-ext-configure gd \
-#        --with-freetype \
-#        --with-webp \
-#        --with-jpeg && \
-#    docker-php-ext-configure pgsql &&\
-#    docker-php-ext-install -j$(nproc) zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache && \
-#    docker-php-ext-enable redis && \
-#    apt-get autoremove
+RUN pecl install redis && \
+    docker-php-ext-configure gd \
+        --with-freetype \
+        --with-webp \
+        --with-jpeg && \
+    docker-php-ext-configure pgsql &&\
+    docker-php-ext-install -j$(nproc) zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache && \
+    docker-php-ext-enable redis && \
+    apt-get autoremove
 
-RUN install-php-extensions redis zip pdo pdo_mysql gd bz2 gmp intl pcntl opcache gd
+# RUN install-php-extensions redis zip pdo pdo_mysql gd bz2 gmp intl pcntl opcache gd
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
