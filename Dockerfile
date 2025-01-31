@@ -23,8 +23,8 @@ FROM --platform=$TARGETPLATFORM php:8.3-apache-bookworm AS seat
 # - others
 ## DISABLED TEMP for other packages
 RUN export DEBIAN_FRONTEND=noninteractive \
-#  && apt-get update \
-#  && apt-get install -y --no-install-recommends \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends \
     iputils-ping dnsutils pkg-config \ 
 #    zip unzip libzip-dev libbz2-dev \
 #    mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
