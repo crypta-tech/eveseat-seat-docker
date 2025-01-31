@@ -39,8 +39,8 @@ RUN pecl install redis && \
     docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg && \
-        docker-php-ext-configure pgsql &&\
-    docker-php-ext-install zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache && \
+    docker-php-ext-configure pgsql &&\
+    docker-php-ext-install -j$(nproc) zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache && \
     docker-php-ext-enable redis && \
     apt-get autoremove
 
