@@ -32,7 +32,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 #    jq libgmp-dev libicu-dev \
     nano \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /var/lib/apt/lists/*
 #  && which pg_config
 
 # PHP Extentions
