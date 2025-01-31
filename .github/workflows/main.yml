@@ -35,7 +35,7 @@ jobs:
         include:
           - os: ubuntu-latest
           - os: ubuntu-24.04-arm
-            platform: linux/arm64ubuntu-24.04-arm
+            platform: linux/arm64
     # The type of runner that the job will run on
     runs-on: "{{ matrix.os }}"
 
