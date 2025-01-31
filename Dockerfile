@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM php:8.4-alpine AS seat-core
+FROM --platform=$TARGETPLATFORM php:8.2-alpine AS seat-core
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
@@ -13,7 +13,7 @@ RUN composer create-project eveseat/seat:^5.0 --stability dev --no-scripts --no-
     php -r "file_exists('.env') || copy('.env.example', '.env');" && \
     mv /tmp/seat-version /seat/storage/version
 
-FROM --platform=$TARGETPLATFORM php:8.3-apache-bookworm AS seat
+FROM --platform=$TARGETPLATFORM php:8.2-apache-bookworm AS seat
 
 # OS Packages
 # - networking diagnose tools
@@ -28,7 +28,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     iputils-ping dnsutils pkg-config \ 
 #    zip unzip libzip-dev libbz2-dev \
 #    mariadb-client libpq-dev libpq5 redis-tools postgresql-client \
-#    libpng-dev libjpeg-dev libfreetype6-dev \
+    libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev\
 #    jq libgmp-dev libicu-dev \
     nano \
   && apt-get clean \
@@ -42,12 +42,14 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 RUN pecl install redis && \
     docker-php-ext-configure gd \
         --with-freetype \
+        --with-webp \
         --with-jpeg && \
 #    docker-php-ext-configure pgsql &&\
 #    docker-php-ext-install -j$(nproc) zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache && \
-    install-php-extension zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache && \
     docker-php-ext-enable redis && \
     apt-get autoremove
+
+RUN install-php-extension zip pdo pdo_mysql pdo_pgsql gd bz2 gmp intl pcntl opcache
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
